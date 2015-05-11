@@ -38,14 +38,7 @@ public class CalendarHelper {
     static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
     static final int PROJECTION_ACCOUNT_TYPE_INDEX = 3;
 
-    static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Events.CALENDAR_ID,
-            CalendarContract.Events.DTSTART,
-            CalendarContract.Events.DTEND,
-            CalendarContract.Events.TITLE,
-            CalendarContract.Events.DESCRIPTION,
-            CalendarContract.Events.EVENT_TIMEZONE
-    };
+
 
     public CalendarHelper(Context c) {
         context = c;
@@ -100,89 +93,6 @@ public class CalendarHelper {
         return result;
     }
 
-    public void lookupEvent(Items event) {
-        Cursor cur = null;
-        ContentResolver cr = context.getContentResolver();
-        Uri uri = CalendarContract.Events.CONTENT_URI;
-
-
-
-        cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
-
-        int ID_INDEX = cur.getColumnIndex(CalendarContract.Events._ID);
-        int NAME_INDEX = cur.getColumnIndex(CalendarContract.Events.TITLE);
-
-        Log.d(TAG, "LookupEvent(): Found " + cur.getCount() + " entries in calendar events.");
-
-        while (cur.moveToNext()) {
-            Log.d(TAG, cur.getString(NAME_INDEX));
-        }
-    }
-
-    public void addDummyEventToCalendar() {
-        long calID = 3;
-        long startMillis = 0;
-        long endMillis = 0;
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2012, 9, 14, 7, 30);
-        startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2012, 9, 14, 8, 45);
-        endMillis = endTime.getTimeInMillis();
-
-
-        ContentResolver cr = context.getContentResolver();
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, startMillis);
-        values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "Jazzercise");
-        values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
-        values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
-        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
-        // get the event ID that is the last element in the Uri
-        long eventID = Long.parseLong(uri.getLastPathSegment());
-
-        Log.d(TAG, "Event " + eventID + " added to calendar!!");
-
-        lookupEvent(createFakeItem());
-    }
-
-    public void lookupCalendars() {
-        // Projection array. Creating indices for this array instead of doing
-        // dynamic lookups improves performance.
-        final String[] EVENT_PROJECTION = new String[] {
-                CalendarContract.Calendars._ID,                           // 0
-                CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
-                CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
-        };
-
-        // The indices for the projection array above.
-        final int PROJECTION_ID_INDEX = 0;
-        final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-        final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-        final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
-
-
-
-
-
-        Cursor cur = null;
-
-        ContentResolver cr = context.getContentResolver();
-        Uri uri = CalendarContract.Calendars.CONTENT_URI;
-        cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
-
-
-
-        Log.d(TAG, "====DISPLAYING LIST OF CALENDARS===");
-        while (cur.moveToNext()) {
-            Log.d(TAG, "Calendar ==> " + cur.getString(PROJECTION_DISPLAY_NAME_INDEX));
-        }
-    }
-
     public void addEventToCalendar(Items event, int calID) {
         long startMillis = 0;
         long endMillis = 0;
@@ -219,21 +129,9 @@ public class CalendarHelper {
 
         Log.d(TAG, "Event " + eventID + " added to calendar!!");
 
-        lookupEvent(event);
-
+        CalendarTest.lookupEvent(event, context);
     }
 
-    static AtomicInteger fakeItemCounter = new AtomicInteger();
 
-    public Items createFakeItem() {
-        Items item = new Items();
-        item.setDate("2-Jul-15");
-        item.setDescription("Test description");
-        item.setName("Super Fake Test Event! Aww yeah");
-        item.setTime("10:00am");
-        item.setType("Event"); //Use this to color event
-        item.setId(fakeItemCounter.getAndIncrement());
 
-        return item;
-    }
 }
