@@ -93,5 +93,49 @@ public class CalendarTest {
         return item;
     }
 
+    static final String[] CALENDAR_PROJECTION = new String[] {
+            CalendarContract.Calendars._ID,                           // 0
+            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
+            CalendarContract.Calendars.OWNER_ACCOUNT,                 // 3
+            CalendarContract.Calendars.ACCOUNT_TYPE                   // 4
+    };
 
+    static final int PROJECTION_ID_INDEX = 0;
+    static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
+    static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
+    static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+    static final int PROJECTION_ACCOUNT_TYPE_INDEX = 3;
+
+    public static void doCalendarLogDump(Context context) {
+
+        // Run query
+        Cursor cur = null;
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        cur = cr.query(uri, CALENDAR_PROJECTION, null, null, null);
+
+        // Use the cursor to step through the returned records
+        while (cur.moveToNext()) {
+            long calID = 0;
+            String displayName = null;
+            String accountName = null;
+            String ownerName = null;
+            String accountType = null;
+
+            // Get the field values
+            calID = cur.getLong(PROJECTION_ID_INDEX);
+            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+            accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
+            ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
+            accountType = cur.getString(PROJECTION_ACCOUNT_TYPE_INDEX);
+
+            // Do something with the values...
+            Log.d(TAG, "Calendar found: " + calID + " \nDisplay name: "
+                    + displayName + " \nAccount name: "
+                    + accountName + " \nOwner name: "
+                    + ownerName + " \nAccount type: "
+                    + accountType);
+        }
+    }
 }
