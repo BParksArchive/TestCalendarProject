@@ -42,27 +42,6 @@ public class CalendarTestActivity extends AppCompatActivity {
 
     }
 
-    public void createNewCalendar(Context context) {
-        ContentValues values = new ContentValues();
-        values.put(Calendars.ACCOUNT_NAME, "Essence Festival 2015_v2");
-        values.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
-        values.put(Calendars.NAME, "ESSENCE_FESTIVAL_2015_v2");
-        values.put(Calendars.CALENDAR_DISPLAY_NAME, "My Events");
-        values.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
-        values.put(Calendars.CALENDAR_COLOR, 0x601F61);
-        values.put(Calendars.OWNER_ACCOUNT, "some.account@googlemail.com");
-        values.put(Calendars.CALENDAR_TIME_ZONE, "US/Central");
-        values.put(Calendars.SYNC_EVENTS, 1);
-        Uri.Builder builder = CalendarContract.Calendars.CONTENT_URI.buildUpon();
-        builder.appendQueryParameter(Calendars.ACCOUNT_NAME, "com.example");
-        builder.appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
-        builder.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER,
-                "true");
-        Uri uri = context.getContentResolver().insert(builder.build(), values);
-
-        calendarId = Long.parseLong(uri.getLastPathSegment());
-    }
-
     private void setCalendarId(long id) {
         calendarId = id;
     }
